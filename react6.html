@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      // Quiz Component
+      const Quiz = () => {
+        // Questions and answers
+        const questions = [
+          {
+            question: "What is the capital of France?",
+            options: ["Paris", "London", "Berlin", "Madrid"],
+            correctAnswer: "Paris",
+          },
+          {
+            question: "Which planet is known as the Red Planet?",
+            options: ["Mars", "Venus", "Jupiter", "Saturn"],
+            correctAnswer: "Mars",
+          },
+          {
+            question: "What is the tallest mammal on Earth?",
+            options: ["Elephant", "Giraffe", "Whale", "Kangaroo"],
+            correctAnswer: "Giraffe",
+          },
+        ];
+
+        // State for selected answers and score
+        const [selectedAnswers, setSelectedAnswers] = React.useState(
+          Array(questions.length).fill("")
+        );
+        const [score, setScore] = React.useState(null);
+
+        // Function to handle answer selection
+        const handleSelectAnswer = (questionIndex, selectedOption) => {
+          const newSelectedAnswers = [...selectedAnswers];
+          newSelectedAnswers[questionIndex] = selectedOption;
+          setSelectedAnswers(newSelectedAnswers);
+        };
+
+        // Function to calculate score and display it
+        const handleSubmit = () => {
+          let totalScore = 0;
+          for (let i = 0; i < questions.length; i++) {
+            if (selectedAnswers[i] === questions[i].correctAnswer) {
+              totalScore++;
+            }
+          }
+          setScore(totalScore);
+        };
+
+        // Function to reset quiz
+        const handleReset = () => {
+          setSelectedAnswers(Array(questions.length).fill(""));
+          setScore(null);
+        };
+
+        return (
+          <div>
+            {score === null ? (
+              <div>
+                {questions.map((question, index) => (
+                  <div key={index}>
+                    <p>{question.question}</p>
+                    <div>
+                      {question.options.map((option, optionIndex) => (
+                        <label key={optionIndex}>
+                          <input
+                            type="radio"
+                            value={option}
+                            checked={selectedAnswers[index] === option}
+                            onChange={() => handleSelectAnswer(index, option)}
+                          />
+                          {option}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                <button onClick={handleSubmit}>Submit</button>
+              </div>
+            ) : (
+              <div>
+                <h2>
+                  Your Score: {score}/{questions.length}
+                </h2>
+                <button onClick={handleReset}>Restart Quiz</button>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      // Render the Quiz component into the root div
+      ReactDOM.render(<Quiz />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

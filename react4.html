@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Picker</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      // ColorPicker component
+      const ColorPicker = () => {
+        const [color, setColor] = React.useState("");
+        const [error, setError] = React.useState("");
+
+        // Function to handle input change
+        const handleChange = (event) => {
+          const inputValue = event.target.value;
+          if (/^#[0-9A-F]{6}$/i.test(inputValue)) {
+            setColor(inputValue);
+            setError("");
+          } else {
+            setColor("");
+            setError("Invalid HEX color code");
+          }
+        };
+
+        return (
+          <div>
+            {/* Input field for HEX color */}
+            <input
+              type="text"
+              placeholder="Enter HEX color code"
+              value={color}
+              onChange={handleChange}
+            />
+            {/* Color preview */}
+            <div
+              style={{
+                width: "100px",
+                height: "100px",
+                backgroundColor: color || "transparent",
+                border: "1px solid #000",
+                marginTop: "10px",
+              }}
+            ></div>
+            {/* Error message for invalid input */}
+            {error && <p style={{ color: "red" }}>{error}</p>}
+          </div>
+        );
+      };
+
+      // Render the ColorPicker component into the root div
+      ReactDOM.render(<ColorPicker />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
